@@ -43,8 +43,8 @@ quarto render report.qmd
 Faça um *fork*, ative o GitHub Actions na aba **Actions** do fork (em forks ele vem desativado)
 e siga as instruções da aula. Em repositórios públicos, os runners hospedados do GitHub são gratuitos.
 
-As pull requests fechadas (#1 a #7) mostram falhas reais — provocadas de propósito para a aula —
-e as correções correspondentes. **Neste repositório o GitHub Actions está desativado**, então as PRs
+As pull requests #1 a #7 mostram falhas reais — provocadas de propósito para a aula —
+e as correções correspondentes. A #8 corrige um erro real, não provocado: o nome da estação. **Neste repositório o GitHub Actions está desativado**, então as PRs
 não exibem checks e o relatório não está publicado no Pages; as saídas das falhas estão nos
 comentários das PRs e nos slides da aula. Num fork com Actions ativo, os quatro workflows rodam
 como descrito.
