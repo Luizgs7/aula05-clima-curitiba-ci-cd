@@ -19,12 +19,18 @@ def f_para_c(valor_f: float) -> float:
     return round((valor_f - 32) * 5 / 9, 2)
 
 
+def pol_para_mm(valor_pol: float) -> float:
+    """Converte precipitação de polegadas para milímetros."""
+    return round(valor_pol * 25.4, 1)
+
+
 def ler_gsod(arquivos: Iterable[Path]) -> pd.DataFrame:
     """Lê os CSV brutos e devolve uma linha por dia, em °C."""
     bruto = pd.concat(pd.read_csv(arquivo) for arquivo in sorted(arquivos))
     dias = pd.DataFrame({"data": pd.to_datetime(bruto["DATE"])})
     for origem, destino in COLUNAS_TEMPERATURA.items():
         dias[destino] = bruto[origem].astype(float).map(f_para_c).to_numpy()
+    dias["chuva_mm"] = bruto["PRCP"].astype(float).map(pol_para_mm).to_numpy()
     return dias.sort_values("data").reset_index(drop=True)
 
 
@@ -36,6 +42,8 @@ def resumo_mensal(dias: pd.DataFrame) -> pd.DataFrame:
         temp_media=("temp_c", "mean"),
         max_media=("max_c", "mean"),
         min_media=("min_c", "mean"),
+        chuva_total=("chuva_mm", "sum"),
+        dias_com_chuva_medida=("chuva_mm", "count"),
     )
     resumo.index.name = "mes"
     resumo["dias_no_mes"] = resumo.index.days_in_month
