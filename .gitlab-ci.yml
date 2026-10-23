@@ -1,0 +1,30 @@
+# Tradução do mesmo fluxo para GitLab CI/CD (comparação na Aula 05).
+# Arquivo de referência: não é executado neste repositório (hospedado no GitHub).
+stages:
+  - quality
+  - report
+
+lint_test:
+  stage: quality
+  image: python:3.12
+  script:
+    - pip install -r requirements.txt
+    - ruff check src tests scripts
+    - ruff format --check src tests scripts
+    - python -m pytest
+
+render_report:
+  stage: report
+  image: ghcr.io/quarto-dev/quarto:1.10.19
+  variables:
+    PYTHONPATH: src
+  script:
+    - apt-get update && apt-get install -y python3 python3-venv
+    - python3 -m venv .venv && . .venv/bin/activate
+    - pip install -r requirements.txt
+    - quarto render report.qmd --to html --output-dir public
+    - mv public/report.html public/index.html
+  artifacts:
+    paths:
+      - public/
+    expire_in: 14 days

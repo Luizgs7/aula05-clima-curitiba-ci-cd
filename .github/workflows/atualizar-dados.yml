@@ -1,0 +1,38 @@
+name: Atualizar dados
+
+on:
+  schedule:
+    # dia 5 de cada mês, 13:00 UTC = 10:00 em Brasília
+    - cron: "0 13 5 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Baixar ano anterior e ano atual da NOAA
+        run: python scripts/baixar_gsod.py $(( $(date +%Y) - 1 )) $(date +%Y)
+      - name: Abrir PR se chegaram dados novos
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- data/raw && [ -z "$(git ls-files --others -- data/raw)" ]; then
+            echo "Nenhum dado novo na NOAA; nada a fazer."
+            exit 0
+          fi
+          ramo="dados/$(date +%Y-%m-%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$ramo"
+          git add data/raw
+          git commit -m "Atualiza dados GSOD ($(date +%Y-%m-%d))"
+          git push -u origin "$ramo"
+          gh pr create --fill --base main

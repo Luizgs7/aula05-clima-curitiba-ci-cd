@@ -33,13 +33,19 @@ def url_do_ano(ano: int) -> str:
     return f"{API}?{urllib.parse.urlencode(params)}"
 
 
-def baixar(ano: int) -> Path:
+def baixar(ano: int) -> Path | None:
     url = url_do_ano(ano)
     with urllib.request.urlopen(url, timeout=120) as resposta:
         conteudo = resposta.read()
     destino = DESTINO / f"gsod_83842_{ano}.csv"
-    destino.write_bytes(conteudo)
     linhas = conteudo.count(b"\n") - 1
+    if linhas <= 0:
+        print(f"{ano}: nenhum dia disponível na API; nada gravado")
+        return None
+    if destino.exists() and destino.read_bytes() == conteudo:
+        print(f"{ano}: {linhas} dias, sem mudança em {destino.name}")
+        return None
+    destino.write_bytes(conteudo)
     print(f"{ano}: {linhas} dias -> {destino.name}")
     registrar_fonte(ano, url, linhas)
     return destino
