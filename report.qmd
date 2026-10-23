@@ -1,0 +1,82 @@
+---
+title: "Clima de Curitiba — relatório mensal"
+subtitle: "Estação Curitiba / Afonso Pena (OMM 83842) · NOAA GSOD"
+format:
+  html:
+    embed-resources: true
+    toc: false
+execute:
+  echo: false
+  warning: false
+jupyter: python3
+---
+
+```{python}
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from IPython.display import Markdown, display
+
+from clima.transform import anomalia, ler_gsod, resumo_mensal
+
+REFERENCIA = (2015, 2024)
+
+dias = ler_gsod(Path("data/raw").glob("gsod_83842_*.csv"))
+resumo = resumo_mensal(dias)
+ultimo = resumo.index.max()
+linha = resumo.loc[ultimo]
+desvio = anomalia(resumo, str(ultimo), REFERENCIA)
+```
+
+```{python}
+#| output: asis
+nome_mes = ultimo.strftime("%m/%Y")
+print(
+    f"**Último mês com dados: {nome_mes}** ({int(linha.dias_com_dado)} de "
+    f"{int(linha.dias_no_mes)} dias). Temperatura média de **{linha.temp_media:.1f} °C**, "
+    f"**{desvio:+.1f} °C** em relação à média do mesmo mês em "
+    f"{REFERENCIA[0]}–{REFERENCIA[1]}. "
+    f"Dados disponíveis até {dias['data'].max():%d/%m/%Y}."
+)
+```
+
+## Temperatura média mensal
+
+```{python}
+#| fig-alt: "Temperatura média mensal do último ano comparada à faixa histórica"
+ano = ultimo.year
+ref = resumo[(resumo.index.year >= REFERENCIA[0]) & (resumo.index.year <= REFERENCIA[1])]
+faixa = ref.groupby(ref.index.month)["temp_media"].agg(["min", "mean", "max"])
+atual = resumo[resumo.index.year == ano]
+
+fig, ax = plt.subplots(figsize=(9, 4.2))
+ax.fill_between(faixa.index, faixa["min"], faixa["max"], color="#D9DEDC", linewidth=0)
+ax.plot(faixa.index, faixa["mean"], color="#8A9490", linewidth=2, linestyle="--")
+ax.plot(atual.index.month, atual["temp_media"], color="#318080", linewidth=2.5,
+        marker="o", markersize=6)
+ax.annotate(f"{ano}", (atual.index.month[-1], atual["temp_media"].iloc[-1]),
+            xytext=(8, 0), textcoords="offset points", color="#246864", va="center",
+            fontweight="bold")
+ax.annotate(f"média {REFERENCIA[0]}–{REFERENCIA[1]}", (12, faixa["mean"].iloc[-1]),
+            xytext=(-4, 10), textcoords="offset points", ha="right", color="#5C6662")
+ax.set_xticks(range(1, 13), ["jan", "fev", "mar", "abr", "mai", "jun",
+                             "jul", "ago", "set", "out", "nov", "dez"])
+ax.set_ylabel("°C")
+ax.spines[["top", "right"]].set_visible(False)
+ax.grid(axis="y", color="#ECEFEE")
+plt.show()
+```
+
+A faixa cinza mostra o menor e o maior valor de cada mês entre {REFERENCIA[0]} e {REFERENCIA[1]}.
+
+## Completude dos dados
+
+```{python}
+incompletos = resumo[resumo["cobertura"] < 0.8][["dias_com_dado", "dias_no_mes", "cobertura"]]
+incompletos.index = incompletos.index.strftime("%m/%Y")
+display(incompletos)
+```
+
+Meses com menos de 80% dos dias não deveriam ser comparados sem ressalva.
+Fonte: NOAA NCEI, Global Summary of the Day (domínio público). Ver `data/raw/FONTE.md`.
