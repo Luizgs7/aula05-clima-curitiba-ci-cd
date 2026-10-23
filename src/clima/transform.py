@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from clima.config import COBERTURA_MINIMA, PERIODO_REFERENCIA
+
 AUSENTE_TEMPERATURA = 9999.9
 AUSENTE_PRECIPITACAO = 99.99
 COLUNAS_TEMPERATURA = {"TEMP": "temp_c", "MAX": "max_c", "MIN": "min_c"}
@@ -64,3 +66,8 @@ def anomalia(resumo: pd.DataFrame, mes: str, referencia: tuple[int, int]) -> flo
         & (resumo.index.year <= fim)
     ]
     return round(resumo.loc[alvo, "temp_media"] - mesmo_mes["temp_media"].mean(), 2)
+
+
+def meses_incompletos(resumo: pd.DataFrame) -> pd.DataFrame:
+    """Meses com cobertura abaixo do mínimo definido em config.py."""
+    return resumo[resumo["cobertura"] < COBERTURA_MINIMA]

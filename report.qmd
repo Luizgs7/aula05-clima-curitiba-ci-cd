@@ -18,9 +18,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import Markdown, display
 
-from clima.transform import anomalia, ler_gsod, resumo_mensal
-
-REFERENCIA = (2015, 2024)
+from clima.config import PERIODO_REFERENCIA as REFERENCIA
+from clima.transform import anomalia, ler_gsod, meses_incompletos, resumo_mensal
 
 dias = ler_gsod(Path("data/raw").glob("gsod_83842_*.csv"))
 resumo = resumo_mensal(dias)
@@ -74,7 +73,7 @@ A faixa cinza mostra o menor e o maior valor de cada mês entre `{python} REFERE
 
 ```{python}
 #| output: asis
-incompletos = resumo[resumo["cobertura"] < 0.8][["dias_com_dado", "dias_no_mes", "cobertura"]]
+incompletos = meses_incompletos(resumo)[["dias_com_dado", "dias_no_mes", "cobertura"]]
 incompletos.index = incompletos.index.strftime("%m/%Y")
 incompletos["cobertura"] = (incompletos["cobertura"] * 100).round().astype(int).astype(str) + "%"
 print(incompletos.rename(columns={
