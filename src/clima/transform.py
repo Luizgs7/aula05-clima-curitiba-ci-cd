@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from clima.config import COBERTURA_MINIMA, PERIODO_REFERENCIA
+from clima.config import COBERTURA_MINIMA
 
 AUSENTE_TEMPERATURA = 9999.9
 AUSENTE_PRECIPITACAO = 99.99
