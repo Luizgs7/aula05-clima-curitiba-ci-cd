@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+_site/
+/.quarto/
+report.html
+report_files/
+*_files/
+.DS_Store
