@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 
 AUSENTE_TEMPERATURA = 9999.9
+AUSENTE_PRECIPITACAO = 99.99
 COLUNAS_TEMPERATURA = {"TEMP": "temp_c", "MAX": "max_c", "MIN": "min_c"}
 
 
@@ -20,7 +21,9 @@ def f_para_c(valor_f: float) -> float:
 
 
 def pol_para_mm(valor_pol: float) -> float:
-    """Converte precipitação de polegadas para milímetros."""
+    """Converte precipitação de polegadas para milímetros; a sentinela 99.99 vira NaN."""
+    if valor_pol == AUSENTE_PRECIPITACAO:
+        return math.nan
     return round(valor_pol * 25.4, 1)
 
 
