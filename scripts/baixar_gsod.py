@@ -1,4 +1,4 @@
-"""Baixa dados diários da estação Curitiba–Afonso Pena (OMM 83842) no NOAA GSOD.
+"""Baixa dados diários da estação Curitiba / Bacacheri (OMM 83842) no NOAA GSOD.
 
 Uso:
     python scripts/baixar_gsod.py 2015 2026

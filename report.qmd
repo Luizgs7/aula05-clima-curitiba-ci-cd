@@ -1,6 +1,6 @@
 ---
 title: "Clima de Curitiba — relatório mensal"
-subtitle: "Estação Curitiba / Afonso Pena (OMM 83842) · NOAA GSOD"
+subtitle: "Estação Curitiba / Bacacheri (OMM 83842) · NOAA GSOD"
 format:
   html:
     embed-resources: true

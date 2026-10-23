@@ -1,7 +1,7 @@
 # Fonte dos dados
 
 - **Base:** NOAA NCEI — Global Summary of the Day (GSOD)
-- **Estação:** 83842099999 — Curitiba / Afonso Pena (código OMM 83842), São José dos Pinhais–PR
+- **Estação:** 83842099999 — Curitiba / Bacacheri (código OMM 83842; aeroporto do Bacacheri, ICAO SBBI), lat. −25,405, lon. −49,232, 932 m. Não confundir com o Afonso Pena (OMM 83840, SBCT), em São José dos Pinhais.
 - **Licença:** dados do governo dos EUA, domínio público (NOAA NCEI)
 - **Documentação das colunas:** <https://www.ncei.noaa.gov/data/global-summary-of-the-day/doc/readme.txt>
 - **Unidades originais:** temperatura em °F, precipitação em polegadas
