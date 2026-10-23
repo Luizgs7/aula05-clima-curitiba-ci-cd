@@ -1,4 +1,4 @@
-"""Leitura e limpeza dos arquivos GSOD da estação Curitiba–Afonso Pena."""
+"""Leitura e limpeza dos arquivos GSOD da estação Curitiba / Bacacheri."""
 
 from __future__ import annotations
 
