@@ -9,3 +9,4 @@ report.html
 report_files/
 *_files/
 .DS_Store
+.venv-dev/

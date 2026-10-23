@@ -73,9 +73,13 @@ A faixa cinza mostra o menor e o maior valor de cada mês entre `{python} REFERE
 ## Completude dos dados
 
 ```{python}
+#| output: asis
 incompletos = resumo[resumo["cobertura"] < 0.8][["dias_com_dado", "dias_no_mes", "cobertura"]]
 incompletos.index = incompletos.index.strftime("%m/%Y")
-display(incompletos)
+incompletos["cobertura"] = (incompletos["cobertura"] * 100).round().astype(int).astype(str) + "%"
+print(incompletos.rename(columns={
+    "dias_com_dado": "Dias com dado", "dias_no_mes": "Dias no mês", "cobertura": "Cobertura"
+}).rename_axis("Mês").to_markdown())
 ```
 
 Meses com menos de 80% dos dias não deveriam ser comparados sem ressalva.
