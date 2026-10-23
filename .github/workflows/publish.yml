@@ -1,0 +1,52 @@
+name: Publicar relatório
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: quarto-dev/quarto-actions/setup@v2.2.0
+      - name: Instalar dependências
+        run: python -m pip install -r requirements.txt
+      - name: Testes antes de publicar
+        run: python -m pytest
+      - name: Renderizar para _site/
+        env:
+          PYTHONPATH: src
+        run: quarto render report.qmd --to html --output-dir _site
+      - name: Página inicial do site
+        run: mv _site/report.html _site/index.html
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: render
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1
