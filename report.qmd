@@ -68,7 +68,7 @@ ax.grid(axis="y", color="#ECEFEE")
 plt.show()
 ```
 
-A faixa cinza mostra o menor e o maior valor de cada mês entre {REFERENCIA[0]} e {REFERENCIA[1]}.
+A faixa cinza mostra o menor e o maior valor de cada mês entre `{python} REFERENCIA[0]` e `{python} REFERENCIA[1]`.
 
 ## Completude dos dados
 
