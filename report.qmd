@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import Markdown, display
 
+from clima.config import COBERTURA_MINIMA
 from clima.config import PERIODO_REFERENCIA as REFERENCIA
 from clima.transform import anomalia, ler_gsod, meses_incompletos, resumo_mensal
 
@@ -38,6 +39,11 @@ print(
     f"{REFERENCIA[0]}–{REFERENCIA[1]}. "
     f"Dados disponíveis até {dias['data'].max():%d/%m/%Y}."
 )
+if linha.cobertura < COBERTURA_MINIMA:
+    print(
+        f"\n\n> **Atenção:** {nome_mes} tem só {linha.cobertura:.0%} dos dias com dado "
+        f"(mínimo adotado: {COBERTURA_MINIMA:.0%}). Compare com cautela."
+    )
 ```
 
 ## Temperatura média mensal

@@ -1,4 +1,6 @@
 """Parâmetros metodológicos do relatório, num só lugar para revisão."""
 
 PERIODO_REFERENCIA = (2015, 2024)
-COBERTURA_MINIMA = 0.75  # aceita 08/2025 (24 de 31 dias) como mês do relatório
+# 90%: sinaliza meses como 03/2024 (87%). O mês do relatório é publicado mesmo
+# abaixo do limite, mas com aviso explícito no texto (ver report.qmd).
+COBERTURA_MINIMA = 0.9
