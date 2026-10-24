@@ -16,8 +16,8 @@ jobs:
   render:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-python@v7.1.0
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
@@ -26,19 +26,21 @@ jobs:
         run: python -m pip install -r requirements.txt
       - name: Testes antes de publicar
         run: python -m pytest
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Renderizar para _site/
         env:
           PYTHONPATH: src
         run: quarto render report.qmd --to html --output-dir _site
-      - name: Página inicial do site
+      - name: Renomear para index.html
         run: mv _site/report.html _site/index.html
-      - uses: actions/upload-pages-artifact@v5.0.0
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
     needs: render
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -49,4 +51,4 @@ jobs:
     steps:
       - name: Publicar no GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5.0.1
+        uses: actions/deploy-pages@v4
