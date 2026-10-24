@@ -38,10 +38,10 @@ python -m pytest
 quarto render report.qmd
 ```
 
-## Laboratório
+## Para praticar
 
 Faça um *fork*, ative o GitHub Actions na aba **Actions** do fork (em forks ele vem desativado)
-e siga as instruções da aula. Em repositórios públicos, os runners hospedados do GitHub são gratuitos.
+para ver os workflows rodando. Em repositórios públicos, os runners hospedados do GitHub são gratuitos.
 
 As pull requests #1 a #7 mostram falhas reais — provocadas de propósito para a aula —
 e as correções correspondentes. A #8 corrige um erro real, não provocado: o nome da estação. **Neste repositório o GitHub Actions está desativado**, então as PRs
